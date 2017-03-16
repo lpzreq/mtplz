@@ -27,6 +27,7 @@ set(KENLM_BUILDER_SOURCE
 # refer to these objects as $<TARGET_OBJECTS:foo>
 #
 add_library(kenlm_builder ${KENLM_BUILDER_SOURCE})
+target_link_libraries(kenlm_builder PUBLIC Boost::boost)
 
 if (NOT MSVC)
 	set(THREADS pthread)
