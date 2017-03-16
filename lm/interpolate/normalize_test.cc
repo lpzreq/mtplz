@@ -61,8 +61,8 @@ BOOST_AUTO_TEST_CASE(Unigrams) {
   // No backoffs.
   util::stream::Chains blank(0);
   util::FixedArray<util::stream::ChainPositions> models_by_order(2);
-  models_by_order.push_back(blank);
-  models_by_order.push_back(blank);
+  models_by_order.push_back(util::stream::ChainPositions(blank));
+  models_by_order.push_back(util::stream::ChainPositions(blank));
 
   util::stream::Chains merged_probabilities(1);
   util::stream::Chains probabilities_out(1);
