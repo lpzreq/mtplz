@@ -29,26 +29,22 @@ set(KENLM_UTIL_SOURCE
 
 set(READ_COMPRESSED_FLAGS)
 set(READ_COMPRESSED_LIBS)
-find_package(ZLIB)
-if (ZLIB_FOUND)
-  set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_ZLIB")
-  set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ${ZLIB_LIBRARIES})
-  include_directories(${ZLIB_INCLUDE_DIR})
-endif()
 
-find_package(BZip2)
-if (BZIP2_FOUND)
-  set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_BZLIB")
-  set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ${BZIP2_LIBRARIES})
-  include_directories(${BZIP2_INCLUDE_DIR})
-endif()
+hunter_add_package(ZLIB)
+find_package(ZLIB CONFIG REQUIRED)
+set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_ZLIB")
+set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ZLIB::zlib)
 
-find_package(LibLZMA)
-if (LIBLZMA_FOUND)
-  set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_XZLIB")
-  set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ${LIBLZMA_LIBRARIES})
-  include_directories(${LIBLZMA_INCLUDE_DIRS})
-endif()
+hunter_add_package(BZip2)
+find_package(BZip2 CONFIG REQUIRED)
+set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_BZLIB")
+set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} BZip2::bz2)
+
+hunter_add_package(lzma)
+find_package(lzma CONFIG REQUIRED)
+set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_XZLIB")
+set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} lzma::lzma)
+
 set_source_files_properties(read_compressed.cc PROPERTIES COMPILE_FLAGS ${READ_COMPRESSED_FLAGS})
 set_source_files_properties(read_compressed_test.cc PROPERTIES COMPILE_FLAGS ${READ_COMPRESSED_FLAGS})
 set_source_files_properties(file_piece_test.cc PROPERTIES COMPILE_FLAGS ${READ_COMPRESSED_FLAGS})
@@ -69,7 +65,7 @@ endif()
 
 # Group these objects together for later use.
 add_library(kenlm_util ${KENLM_UTIL_DOUBLECONVERSION_SOURCE} ${KENLM_UTIL_STREAM_SOURCE} ${KENLM_UTIL_SOURCE})
-target_link_libraries(kenlm_util ${Boost_LIBRARIES} ${READ_COMPRESSED_LIBS} ${THREADS} ${TIMER_LINK})
+target_link_libraries(kenlm_util Boost::boost ${READ_COMPRESSED_LIBS} ${THREADS} ${TIMER_LINK})
 
 AddExes(EXES probing_hash_table_benchmark
         LIBRARIES kenlm_util ${Boost_LIBRARIES} ${THREADS})
