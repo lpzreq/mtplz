@@ -8,7 +8,7 @@ HunterGate(
 )
 
 # Define a single cmake project
-project(kenlm VERSION 0.1)
+project(mtplz VERSION 0.1)
 
 # Tell cmake that we want unit tests to be compiled
 include(CTest)
