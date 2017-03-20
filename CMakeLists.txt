@@ -73,7 +73,7 @@ configure_package_config_file(
 
 install(
     DIRECTORY decode lm pt util search
-    DESTINATION "${include_install_dir}/${PROJECT_NAME}"
+    DESTINATION "${include_install_dir}"
     FILES_MATCHING PATTERN "*.hh"
 )
 
