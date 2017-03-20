@@ -8,6 +8,15 @@ add_library(mtplz_pt ${PT_SOURCE})
 target_link_libraries(mtplz_pt kenlm_util)
 target_compile_features(mtplz_pt PUBLIC cxx_range_for)
 
+install(
+    TARGETS mtplz_pt
+    EXPORT "${targets_export_name}"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    RUNTIME DESTINATION "bin"
+    INCLUDES DESTINATION "${include_install_dir}"
+)
+
 AddExes(EXES binarize_phrase_table LIBRARIES mtplz_pt kenlm_util ${Boost_LIBRARIES} ${THREADS})
 target_compile_features(binarize_phrase_table PUBLIC cxx_range_for)
 

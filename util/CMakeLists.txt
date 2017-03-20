@@ -67,6 +67,15 @@ endif()
 add_library(kenlm_util ${KENLM_UTIL_DOUBLECONVERSION_SOURCE} ${KENLM_UTIL_STREAM_SOURCE} ${KENLM_UTIL_SOURCE})
 target_link_libraries(kenlm_util Boost::boost ${READ_COMPRESSED_LIBS} ${THREADS} ${TIMER_LINK})
 
+install(
+    TARGETS kenlm_util
+    EXPORT "${targets_export_name}"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    RUNTIME DESTINATION "bin"
+    INCLUDES DESTINATION "${include_install_dir}"
+)
+
 AddExes(EXES probing_hash_table_benchmark
         LIBRARIES kenlm_util ${Boost_LIBRARIES} ${THREADS})
 AddExes(EXES cat_compressed

@@ -18,6 +18,15 @@ add_library(mtplz_decode ${DECODE_SOURCE})
 target_link_libraries(mtplz_decode mtplz_search mtplz_pt kenlm kenlm_util ${Boost_LIBRARIES})
 target_compile_features(mtplz_decode PUBLIC cxx_range_for)
 
+install(
+    TARGETS mtplz_decode
+    EXPORT "${targets_export_name}"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    RUNTIME DESTINATION "bin"
+    INCLUDES DESTINATION "${include_install_dir}"
+)
+
 set(DECODE_LIBS mtplz_decode mtplz_search mtplz_pt kenlm kenlm_util ${Boost_LIBRARIES})
 
 AddExes(EXES decode LIBRARIES ${DECODE_LIBS})

@@ -8,7 +8,7 @@ HunterGate(
 )
 
 # Define a single cmake project
-project(kenlm)
+project(kenlm VERSION 0.1)
 
 # Tell cmake that we want unit tests to be compiled
 include(CTest)
@@ -41,6 +41,54 @@ set(
     Boost::program_options
     Boost::unit_test_framework
 )
+
+# Installation {
+# (https://github.com/forexample/package-example)
+
+set(config_install_dir "lib/cmake/${PROJECT_NAME}")
+set(include_install_dir "include")
+
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
+set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+set(targets_export_name "${PROJECT_NAME}Targets")
+set(namespace "${PROJECT_NAME}::")
+
+include(CMakePackageConfigHelpers)
+
+# Note: PROJECT_VERSION is used as a VERSION
+write_basic_package_version_file(
+    "${version_config}" COMPATIBILITY SameMajorVersion
+)
+
+# Use variables:
+#   * targets_export_name
+#   * PROJECT_NAME
+configure_package_config_file(
+    "cmake/Config.cmake.in"
+    "${project_config}"
+    INSTALL_DESTINATION "${config_install_dir}"
+)
+
+install(
+    DIRECTORY decode lm pt util search
+    DESTINATION "${include_install_dir}/${PROJECT_NAME}"
+    FILES_MATCHING PATTERN "*.hh"
+)
+
+install(
+    FILES "${project_config}" "${version_config}"
+    DESTINATION "${config_install_dir}"
+)
+
+install(
+    EXPORT "${targets_export_name}"
+    NAMESPACE "${namespace}"
+    DESTINATION "${config_install_dir}"
+)
+
+# }
 
 include_directories("${CMAKE_CURRENT_LIST_DIR}")
 
