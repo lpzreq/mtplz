@@ -62,7 +62,7 @@ static const double_conversion::StringToDoubleConverter kConverter(0, std::numer
 
 struct TakeLogAndMosesFloor {
   float operator()(float in) const {
-    return std::max(-100.0f, log(in));
+    return std::max<float>(-100.0f, log(in));
   }
 };
 struct FloatIdentity {
