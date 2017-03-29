@@ -53,10 +53,18 @@ set_source_files_properties(file_piece_test.cc PROPERTIES COMPILE_FLAGS ${READ_C
 add_subdirectory(double-conversion)
 add_subdirectory(stream)
 
-if (UNIX AND NOT APPLE)
-  set(TIMER_LINK rt)
-else()
-  set(TIMER_LINK)
+# Finding 'rt' library:
+# * https://github.com/ruslo/hunter/blob/eaf4656a3e34798e7f306cccad472e27501c735c/cmake/templates/BoostConfig.cmake.in#L17-L33
+include(CheckCXXSymbolExists)
+set(TIMER_LINK)
+check_cxx_symbol_exists("clock_gettime" "time.h" mtplz_have_clock_gettime)
+if(NOT mtplz_have_clock_gettime)
+  include(CheckLibraryExists)
+  check_library_exists(rt clock_gettime "" mtplz_check_rt_library)
+
+  if(mtplz_check_rt_library)
+    set(TIMER_LINK rt)
+  endif()
 endif()
 
 # Group these objects together for later use.
