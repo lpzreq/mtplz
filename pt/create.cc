@@ -16,7 +16,7 @@
 #include "util/tokenize_piece.hh"
 
 #include <cmath>
-#include <algorithm>
+#include <algorithm> // std::max
 
 namespace pt {
 
@@ -62,7 +62,7 @@ static const double_conversion::StringToDoubleConverter kConverter(0, std::numer
 
 struct TakeLogAndMosesFloor {
   float operator()(float in) const {
-    return std::max(-100.0, log(in));
+    return std::max(-100.0f, log(in));
   }
 };
 struct FloatIdentity {
