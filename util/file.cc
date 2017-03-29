@@ -1,6 +1,10 @@
 #define _LARGEFILE64_SOURCE
 #define _FILE_OFFSET_BITS 64
 
+#if defined(__ANDROID__)
+# define OS_ANDROID
+#endif
+
 #include "util/file.hh"
 
 #include "util/exception.hh"
@@ -540,7 +544,7 @@ std::string DefaultTempDirectory() {
   const char *const vars[] = {"TMPDIR", "TMP", "TEMPDIR", "TEMP", 0};
   for (int i=0; vars[i]; ++i) {
     char *val =
-#if defined(_GNU_SOURCE)
+#if defined(_GNU_SOURCE) && defined(__GLIBC_PREREQ)
 #if __GLIBC_PREREQ(2,17)
       secure_getenv
 #else // __GLIBC_PREREQ
