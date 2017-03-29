@@ -90,6 +90,8 @@ install(
 
 # }
 
+find_package(Threads REQUIRED)
+
 include_directories("${CMAKE_CURRENT_LIST_DIR}")
 
 # Process subdirectories

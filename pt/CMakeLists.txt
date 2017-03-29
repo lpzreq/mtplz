@@ -17,12 +17,12 @@ install(
     INCLUDES DESTINATION "${include_install_dir}"
 )
 
-AddExes(EXES binarize_phrase_table LIBRARIES mtplz_pt kenlm_util ${Boost_LIBRARIES} ${THREADS})
+AddExes(EXES binarize_phrase_table LIBRARIES mtplz_pt kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 target_compile_features(binarize_phrase_table PUBLIC cxx_range_for)
 
 AddTests(TESTS
   access_test
   phrase_table_test
-  LIBRARIES mtplz_pt kenlm_util ${Boost_LIBRARIES} ${THREADS})
+  LIBRARIES mtplz_pt kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 target_compile_features(access_test PUBLIC cxx_range_for)
 target_compile_features(phrase_table_test PUBLIC cxx_range_for)
