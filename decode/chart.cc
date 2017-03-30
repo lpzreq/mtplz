@@ -12,8 +12,8 @@ Chart::Chart(std::size_t max_source_phrase_length,
     const BaseVocab &vocab,
     Objective &objective,
     VertexCache &cache)
-    : objective_(objective),
-      vocab_map_(objective, vocab),
+    : vocab_map_(objective, vocab),
+      objective_(objective),
       feature_init_(objective.GetFeatureInit()),
       max_source_phrase_length_(max_source_phrase_length),
       cache_(cache) {
