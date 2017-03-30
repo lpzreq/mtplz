@@ -298,12 +298,6 @@ class StringBuilder {
 template <class Dest, class Source>
 inline Dest BitCast(const Source& source) {
   static_assert(sizeof(Dest) == sizeof(Source), "");
-
-#if __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ >= 8
-      __attribute__((unused))
-#endif
-      ;
-
   Dest dest;
   memmove(&dest, &source, sizeof(dest));
   return dest;
