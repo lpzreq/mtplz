@@ -108,7 +108,6 @@ void CreateTable(int from, int to, const TextColumns columns, FieldConfig &confi
 
   BIND_COLUMN(target);
   BIND_COLUMN(dense_features);
-  BIND_COLUMN(sparse_features);
   BIND_COLUMN(lexical_reordering);
 
   // Compute number of feature columns from first row.

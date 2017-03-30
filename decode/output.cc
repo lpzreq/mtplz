@@ -42,10 +42,7 @@ void Output(const Hypothesis &hypo, const VocabMap &vocab,
     }
     if (verbose) {
       float this_score = hypo.GetScore();
-      float score_delta = this_score - previous_score;
       previous_score = this_score;
-      // TODO make this work again
-      /* PrintOptionalInfo(map, score_delta, out); */
     }
   }
 }

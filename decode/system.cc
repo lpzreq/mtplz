@@ -7,12 +7,14 @@ namespace decode {
   
 System::System(const Config config, const pt::Access &phrase_access,
     const Weights &weights, const lm::ngram::Model &lm)
-  : config_(config), weights_(weights),
-  objective_(phrase_access, lm.BeginSentenceState()),
+  : objective_(phrase_access, lm.BeginSentenceState()),
+  config_(config),
   search_context_(search::Config(
         weights.LMWeight(),
         config.pop_limit,
-        search::NBestConfig(1)), lm) {}
+        search::NBestConfig(1)), lm),
+  weights_(weights)
+  {}
 
 void System::LoadWeights() {
   objective_.LoadWeights(weights_);

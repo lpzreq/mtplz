@@ -10,7 +10,7 @@
 
 namespace pt {
 
-class Statistics;
+struct Statistics;
 
 /*class CurriedRow {
   public:

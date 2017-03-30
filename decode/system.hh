@@ -6,7 +6,7 @@
 #include "search/context.hh"
 
 namespace pt {
-  struct VocabRange;
+  class VocabRange;
   class Access;
 }
 

@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 // TODO replace with decode-local type
-namespace pt { struct Row; }
+namespace pt { class Row; }
 
 namespace decode {
 

@@ -5,7 +5,7 @@
 namespace decode {
 
 VocabMap::VocabMap(Objective &objective, const BaseVocab &base)
-  : objective_(objective), base_(base), base_size_(base.Size()) {}
+  : base_(base), base_size_(base.Size()), objective_(objective) {}
 
 VocabWord *VocabMap::FindOrInsert(const StringPiece word, ID &id) {
   id = base_.vocab.Find(word);

@@ -12,11 +12,11 @@ Chart::Chart(std::size_t max_source_phrase_length,
     const BaseVocab &vocab,
     Objective &objective,
     VertexCache &cache)
-    : max_source_phrase_length_(max_source_phrase_length),
-      objective_(objective),
+    : objective_(objective),
+      vocab_map_(objective, vocab),
       feature_init_(objective.GetFeatureInit()),
-      cache_(cache),
-      vocab_map_(objective, vocab) {
+      max_source_phrase_length_(max_source_phrase_length),
+      cache_(cache) {
   UTIL_THROW_IF(objective.GetLanguageModelFeature() == nullptr, util::Exception,
       "Missing language model for objective!");
   pt::Access access = feature_init_.phrase_access;

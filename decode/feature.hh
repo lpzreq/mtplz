@@ -14,7 +14,7 @@ namespace decode {
 class VocabMap;
 
 // Layouts:
-struct Hypothesis;
+class Hypothesis;
 struct VocabWord;
 
 struct TargetPhraseInfo {

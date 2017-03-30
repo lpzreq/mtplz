@@ -127,6 +127,7 @@ std::string Objective::FeatureDescription(std::size_t index) const {
       return feature.feature->FeatureDescription(local_index);
     }
   }
+  return "";
 }
 
 ScoreCollector Objective::GetCollector(
