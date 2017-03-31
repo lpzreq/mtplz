@@ -32,14 +32,17 @@
 #include <string.h>
 
 #include <assert.h>
+
 #ifndef ASSERT
-#define ASSERT(condition)      (assert(condition))
+# define ASSERT(condition)      (assert(condition))
 #endif
+
 #ifndef UNIMPLEMENTED
-#define UNIMPLEMENTED() (abort())
+# define UNIMPLEMENTED() (abort())
 #endif
+
 #ifndef UNREACHABLE
-#define UNREACHABLE()   (abort())
+# define UNREACHABLE()   (abort())
 #endif
 
 // Double operations detection based on target architecture.
@@ -59,16 +62,16 @@
     defined(__sparc__) || defined(__sparc) || defined(__s390__) || \
     defined(__SH4__) || defined(__alpha__) || defined(__arm64__) || \
     defined(_MIPS_ARCH_MIPS32R2)
-#define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+# define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
 #elif defined(_M_IX86) || defined(__i386__) || defined(__i386)
-#if defined(_WIN32)
+# if defined(_WIN32)
 // Windows uses a 64bit wide floating point stack.
-#define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+#  define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+# else
+#  undef DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS
+# endif  // _WIN32
 #else
-#undef DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS
-#endif  // _WIN32
-#else
-#error Target architecture was not detected as supported by Double-Conversion.
+# error Target architecture was not detected as supported by Double-Conversion.
 #endif
 
 
@@ -86,7 +89,7 @@ typedef unsigned __int64 uint64_t;
 
 #else
 
-#include <stdint.h>
+# include <stdint.h>
 
 #endif
 
@@ -101,7 +104,7 @@ typedef unsigned __int64 uint64_t;
 // array. You should only use ARRAY_SIZE on statically allocated
 // arrays.
 #ifndef ARRAY_SIZE
-#define ARRAY_SIZE(a)                                   \
+# define ARRAY_SIZE(a)                                   \
   ((sizeof(a) / sizeof(*(a))) /                         \
   static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
 #endif
@@ -109,7 +112,7 @@ typedef unsigned __int64 uint64_t;
 // A macro to disallow the evil copy constructor and operator= functions
 // This should be used in the private: declarations for a class
 #ifndef DISALLOW_COPY_AND_ASSIGN
-#define DISALLOW_COPY_AND_ASSIGN(TypeName)      \
+# define DISALLOW_COPY_AND_ASSIGN(TypeName)      \
   TypeName(const TypeName&);                    \
   void operator=(const TypeName&)
 #endif
@@ -121,7 +124,7 @@ typedef unsigned __int64 uint64_t;
 // that wants to prevent anyone from instantiating it. This is
 // especially useful for classes containing only static methods.
 #ifndef DISALLOW_IMPLICIT_CONSTRUCTORS
-#define DISALLOW_IMPLICIT_CONSTRUCTORS(TypeName) \
+# define DISALLOW_IMPLICIT_CONSTRUCTORS(TypeName) \
   TypeName();                                    \
   DISALLOW_COPY_AND_ASSIGN(TypeName)
 #endif
