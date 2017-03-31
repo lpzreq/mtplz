@@ -39,6 +39,15 @@ class FileStream : public FakeOStream<FileStream> {
       fd_ = to;
     }
 
+    int getResult(char *buffer, int *bufferLenght) {
+        if (bufferLenght == nullptr || buffer == nullptr) return 4;
+        *bufferLenght = (int) (current_ - (char*)buf_.get() - 1);
+        if (*bufferLenght == 0) return 5;
+        memset(buffer, 0x00, current_ - (char*)buf_.get() + 1);
+        memcpy(buffer, (char*)buf_.get() + 1, current_ - (char*)buf_.get() - 1);
+        return 0;
+    }
+    
     FileStream &flush() {
       if (current_ != buf_.get()) {
         util::WriteOrThrow(fd_, buf_.get(), current_ - (char*)buf_.get());
