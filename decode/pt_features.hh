@@ -1,6 +1,7 @@
 #pragma once
 
 #include "decode/feature.hh"
+#include "util/float_memcpy.hh"
 
 namespace decode {
 
@@ -21,14 +22,21 @@ class PhraseTableFeatures : public Feature {
 
     void InitPassthroughPhrase(pt::Row *passthrough, TargetPhraseType type) const override {
       std::size_t num_features = DenseFeatureCount();
+      const float default_value = DEFAULT_VALUE;
       for (std::size_t i = 0; i < num_features; ++i) {
-        phrase_access_->dense_features(passthrough)[i] = DEFAULT_VALUE;
+        mtplz::util::float_memcpy(
+            phrase_access_->dense_features(passthrough)[i],
+            default_value
+        );
       }
     }
 
     void ScoreTargetPhrase(TargetPhraseInfo target, ScoreCollector &collector) const override {
       std::size_t i = 0;
-      for (float feature : phrase_access_->dense_features(pt_row_field_(target.phrase))) {
+      auto j = phrase_access_->dense_features(pt_row_field_(target.phrase));
+      for (auto k = j.begin(); k != j.end(); ++k) {
+        float feature;
+        mtplz::util::float_memcpy(feature, *k);
         collector.AddDense(i++, feature);
       }
     }

@@ -1,5 +1,6 @@
 #include "decode/lexro.hh"
 #include "util/exception.hh"
+#include "util/float_memcpy.hh"
 
 namespace decode {
 
@@ -12,8 +13,12 @@ void LexicalizedReordering::Init(FeatureInit &feature_init) {
 }
 
 void LexicalizedReordering::InitPassthroughPhrase(pt::Row *passthrough, TargetPhraseType type) const {
+  const float default_value = DEFAULT_VALUE;
   for(uint8_t i = 0; i < VALUE_COUNT; ++i) {
-    phrase_access_->lexical_reordering(passthrough)[i] = DEFAULT_VALUE;
+    mtplz::util::float_memcpy(
+      phrase_access_->lexical_reordering(passthrough)[i],
+      default_value
+    );
   }
 }
 
@@ -40,7 +45,10 @@ void LexicalizedReordering::ScoreHypothesisWithPhrasePair(
   SourceSpan hypo_span(phrase_start_(&hypothesis), hypothesis.SourceEndIndex());
   uint8_t index = FORWARD + PhraseRelation(hypo_span, phrase_pair.source.Span());
   const pt::Row *target = pt_row_(phrase_pair.target);
-  float score = phrase_access_->lexical_reordering(target)[index];
+  float score;
+  mtplz::util::float_memcpy(
+      score, phrase_access_->lexical_reordering(target)[index]
+  );
   collector.AddDense(index, score);
 }
 

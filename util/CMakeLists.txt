@@ -9,6 +9,7 @@
 #    CMake files in the parent directory won't be able to access this variable.
 #
 set(KENLM_UTIL_SOURCE
+  float_memcpy.hh
   bit_packing.cc
   ersatz_progress.cc
   exception.cc
