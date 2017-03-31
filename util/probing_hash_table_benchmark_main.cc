@@ -156,31 +156,6 @@ template <class Queue> bool Test(URandom &rn, uint64_t entries, const uint64_t *
   return meaningless;
 }
 
-bool TestRun(uint64_t lookups = 20000000, float multiplier = 1.5) {
-  URandom rn;
-  util::scoped_memory queries;
-  HugeMalloc(lookups * sizeof(uint64_t), true, queries);
-  rn.Batch(static_cast<uint64_t*>(queries.get()), static_cast<uint64_t*>(queries.get()) + lookups);
-  uint64_t physical_mem_limit = util::GuessPhysicalMemory() / 2;
-  bool meaningless = true;
-  for (uint64_t i = 4; Size(i / multiplier) < physical_mem_limit; i *= 4) {
-    std::cout << static_cast<std::size_t>(i / multiplier) << ' ' << Size(i / multiplier);
-    typedef util::ProbingHashTable<Entry, util::IdentityHash, std::equal_to<Entry::Key>, Power2Mod> Table;
-    typedef util::ProbingHashTable<Entry, util::IdentityHash, std::equal_to<Entry::Key>, DivMod> TableDiv;
-    const uint64_t *const queries_begin = static_cast<const uint64_t*>(queries.get());
-    meaningless ^= util::Test<Immediate<TableDiv> >(rn, i / multiplier, queries_begin, queries_begin + lookups, true, multiplier);
-    meaningless ^= util::Test<Immediate<Table> >(rn, i / multiplier, queries_begin, queries_begin + lookups, true, multiplier);
-    meaningless ^= util::Test<PrefetchQueue<Table, 4> >(rn, i / multiplier, queries_begin, queries_begin + lookups, true, multiplier);
-    meaningless ^= util::Test<Immediate<Table> >(rn, i / multiplier, queries_begin, queries_begin + lookups, false, multiplier);
-    meaningless ^= util::Test<PrefetchQueue<Table, 2> >(rn, i / multiplier, queries_begin, queries_begin + lookups, false, multiplier);
-    meaningless ^= util::Test<PrefetchQueue<Table, 4> >(rn, i / multiplier, queries_begin, queries_begin + lookups, false, multiplier);
-    meaningless ^= util::Test<PrefetchQueue<Table, 8> >(rn, i / multiplier, queries_begin, queries_begin + lookups, false, multiplier);
-    meaningless ^= util::Test<PrefetchQueue<Table, 16> >(rn, i / multiplier, queries_begin, queries_begin + lookups, false, multiplier);
-    std::cout << std::endl;
-  }
-  return meaningless;
-}
-
 template<class Table>
 struct ParallelTestRequest{
   ParallelTestRequest() : queries_begin_(NULL), queries_end_(NULL), table_(NULL) {}
@@ -308,9 +283,6 @@ void ParallelTestRun(std::size_t tasks_per_thread = 1, std::size_t burn = 4000, 
 } // namespace util
 
 int main() {
-  //bool meaningless = false;
   std::cout << "#CPU time\n";
-  //meaningless ^= util::TestRun();
   util::ParallelTestRun(10, 4000);
-  //std::cerr << "Meaningless: " << meaningless << '\n';
 }

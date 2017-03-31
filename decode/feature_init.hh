@@ -18,12 +18,12 @@ typedef lm::ngram::Right LMState;
 struct FeatureInit {
 
   explicit FeatureInit(const pt::Access &phrase_accessor) :
-    phrase_access(phrase_accessor),
     hypothesis_field(hypothesis_layout),
     lm_state_field(hypothesis_layout),
-    pt_id_field(word_layout),
     pt_row_field(target_phrase_layout),
-    phrase_score_field(target_phrase_layout) {}
+    phrase_score_field(target_phrase_layout),
+    pt_id_field(word_layout),
+    phrase_access(phrase_accessor) {}
 
   /** The first field of a hypothesis layout is always the Hypothesis
     * object, which stores the most important attributes of a hypothesis.

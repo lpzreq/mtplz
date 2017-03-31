@@ -36,8 +36,6 @@ class TargetWriter {
     char *buffer_end_;
 
     FileFormat &file_;
-
-    uint64_t written_ = 0;
 };
 
 // Write target phrases for a given source phrase.

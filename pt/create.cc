@@ -16,7 +16,7 @@
 #include "util/tokenize_piece.hh"
 
 #include <cmath>
-#include <algorithm>
+#include <algorithm> // std::max
 
 namespace pt {
 
@@ -62,7 +62,7 @@ static const double_conversion::StringToDoubleConverter kConverter(0, std::numer
 
 struct TakeLogAndMosesFloor {
   float operator()(float in) const {
-    return std::max(-100.0, log(in));
+    return std::max<float>(-100.0f, log(in));
   }
 };
 struct FloatIdentity {
@@ -108,7 +108,6 @@ void CreateTable(int from, int to, const TextColumns columns, FieldConfig &confi
 
   BIND_COLUMN(target);
   BIND_COLUMN(dense_features);
-  BIND_COLUMN(sparse_features);
   BIND_COLUMN(lexical_reordering);
 
   // Compute number of feature columns from first row.

@@ -3,7 +3,7 @@
 #include "decode/hypothesis.hh"
 #include "decode/feature_init.hh"
 
-namespace pt { struct Row; }
+namespace pt { class Row; }
 
 namespace decode {
 
@@ -13,7 +13,7 @@ namespace decode {
 class HypothesisBuilder {
   public:
     HypothesisBuilder(util::Pool &pool, FeatureInit &feature_init)
-      : pool_(pool), feature_init_(feature_init) {}
+      : feature_init_(feature_init), pool_(pool) {}
 
     /** Build root hypothesis */
     Hypothesis *BuildHypothesis(

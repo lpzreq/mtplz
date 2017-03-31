@@ -27,15 +27,12 @@ set(KENLM_BUILDER_SOURCE
 # refer to these objects as $<TARGET_OBJECTS:foo>
 #
 add_library(kenlm_builder ${KENLM_BUILDER_SOURCE})
-
-if (NOT MSVC)
-	set(THREADS pthread)
-endif()
+target_link_libraries(kenlm_builder PUBLIC Boost::boost)
 
 AddExes(EXES lmplz
-        LIBRARIES kenlm_builder kenlm kenlm_util ${Boost_LIBRARIES} ${THREADS})
+        LIBRARIES kenlm_builder kenlm kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 AddExes(EXES count_ngrams
-        LIBRARIES kenlm_builder kenlm kenlm_util ${Boost_LIBRARIES} ${THREADS})
+        LIBRARIES kenlm_builder kenlm kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 
 if(BUILD_TESTING)
 
@@ -46,5 +43,5 @@ if(BUILD_TESTING)
   )
 
   AddTests(TESTS ${KENLM_BOOST_TESTS_LIST}
-           LIBRARIES kenlm_builder kenlm kenlm_util ${Boost_LIBRARIES} ${THREADS})
+           LIBRARIES kenlm_builder kenlm kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 endif()

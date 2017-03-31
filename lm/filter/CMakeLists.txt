@@ -23,11 +23,8 @@ set(KENLM_FILTER_SOURCE
 # refer to these objects as $<TARGET_OBJECTS:foo>
 #
 add_library(kenlm_filter ${KENLM_FILTER_SOURCE})
-
-if (NOT MSVC)
-	set(THREADS pthread)
-endif()
+target_link_libraries(kenlm_filter PUBLIC Boost::boost)
 
 AddExes(EXES filter phrase_table_vocab
-        LIBRARIES kenlm_filter kenlm kenlm_util ${Boost_LIBRARIES} ${THREADS})
+        LIBRARIES kenlm_filter kenlm kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 

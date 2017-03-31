@@ -74,13 +74,13 @@ template <class T> class FixedArray {
 #if __cplusplus >= 201103L
     FixedArray(FixedArray &&from)
       : block_(std::move(from.block_)),
-        newed_end_(from.newed_end_),
-#  ifdef NDEBUG
-        allocated_end_(from.allocated_end_)
+        newed_end_(from.newed_end_)
+#  ifndef NDEBUG
+        , allocated_end_(from.allocated_end_)
 #  endif // NDEBUG
     {
       from.newed_end_ = NULL;
-#  ifdef NDEBUG
+#  ifndef NDEBUG
       from.allocated_end_ = NULL;
 #  endif // NDEBUG
     }
@@ -138,11 +138,11 @@ template <class T> class FixedArray {
      * I miss C++11 variadic templates.
      */
 #if __cplusplus >= 201103L
-    template <typename... Construct> T *emplace_back(Construct... construct) {
+    template <typename... Construct> void emplace_back(Construct... construct) {
       new (end()) T(construct...);
       Constructed();
     }
-    template <typename... Construct> T *push_back(Construct... construct) {
+    template <typename... Construct> void push_back(Construct... construct) {
       new (end()) T(construct...);
       Constructed();
     }

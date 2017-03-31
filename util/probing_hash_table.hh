@@ -65,7 +65,9 @@ class Power2Mod {
       from |= from >> 4;
       from |= from >> 8;
       from |= from >> 16;
-      from |= from >> 32;
+      if (sizeof(std::size_t) > sizeof(uint32_t)) {
+        from |= from >> 32;
+      }
       return from + 1;
     }
 

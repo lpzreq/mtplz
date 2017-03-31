@@ -164,7 +164,7 @@ class EdgeOutput {
     typedef boost::unordered_set<Hypothesis *, Recombinator<LMState>, Recombinator<LMState>> Dedupe;
 
     EdgeOutput(Stack &stack, MergeInfo merge_info, Dedupe deduper, search::EdgeGenerator &gen)
-      : stack_(stack), merge_info_(merge_info), deduper_(deduper), queue_(gen) {}
+      : deduper_(deduper), stack_(stack), queue_(gen), merge_info_(merge_info) {}
 
     bool NewHypothesis(search::PartialEdge complete) {
       if (!IsCompleteHypothesis(complete)) {
@@ -207,7 +207,7 @@ class EdgeOutput {
 class PickBest {
   public:
     PickBest(Stack &stack, MergeInfo merge_info, search::EdgeGenerator &gen) :
-      stack_(stack), merge_info_(merge_info), queue_(gen) {
+      stack_(stack), queue_(gen), merge_info_(merge_info) {
       stack_.clear();
       stack_.reserve(1);
     }

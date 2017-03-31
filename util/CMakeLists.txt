@@ -29,26 +29,22 @@ set(KENLM_UTIL_SOURCE
 
 set(READ_COMPRESSED_FLAGS)
 set(READ_COMPRESSED_LIBS)
-find_package(ZLIB)
-if (ZLIB_FOUND)
-  set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_ZLIB")
-  set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ${ZLIB_LIBRARIES})
-  include_directories(${ZLIB_INCLUDE_DIR})
-endif()
 
-find_package(BZip2)
-if (BZIP2_FOUND)
-  set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_BZLIB")
-  set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ${BZIP2_LIBRARIES})
-  include_directories(${BZIP2_INCLUDE_DIR})
-endif()
+hunter_add_package(ZLIB)
+find_package(ZLIB CONFIG REQUIRED)
+set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_ZLIB")
+set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ZLIB::zlib)
 
-find_package(LibLZMA)
-if (LIBLZMA_FOUND)
-  set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_XZLIB")
-  set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} ${LIBLZMA_LIBRARIES})
-  include_directories(${LIBLZMA_INCLUDE_DIRS})
-endif()
+hunter_add_package(BZip2)
+find_package(BZip2 CONFIG REQUIRED)
+set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_BZLIB")
+set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} BZip2::bz2)
+
+hunter_add_package(lzma)
+find_package(lzma CONFIG REQUIRED)
+set(READ_COMPRESSED_FLAGS "${READ_COMPRESSED_FLAGS} -DHAVE_XZLIB")
+set(READ_COMPRESSED_LIBS ${READ_COMPRESSED_LIBS} lzma::lzma)
+
 set_source_files_properties(read_compressed.cc PROPERTIES COMPILE_FLAGS ${READ_COMPRESSED_FLAGS})
 set_source_files_properties(read_compressed_test.cc PROPERTIES COMPILE_FLAGS ${READ_COMPRESSED_FLAGS})
 set_source_files_properties(file_piece_test.cc PROPERTIES COMPILE_FLAGS ${READ_COMPRESSED_FLAGS})
@@ -57,24 +53,37 @@ set_source_files_properties(file_piece_test.cc PROPERTIES COMPILE_FLAGS ${READ_C
 add_subdirectory(double-conversion)
 add_subdirectory(stream)
 
-if (UNIX AND NOT APPLE)
-  set(TIMER_LINK rt)
-else()
-  set(TIMER_LINK)
-endif()
+# Finding 'rt' library:
+# * https://github.com/ruslo/hunter/blob/eaf4656a3e34798e7f306cccad472e27501c735c/cmake/templates/BoostConfig.cmake.in#L17-L33
+include(CheckCXXSymbolExists)
+set(TIMER_LINK)
+check_cxx_symbol_exists("clock_gettime" "time.h" mtplz_have_clock_gettime)
+if(NOT mtplz_have_clock_gettime)
+  include(CheckLibraryExists)
+  check_library_exists(rt clock_gettime "" mtplz_check_rt_library)
 
-if (NOT MSVC)
-	set(THREADS pthread)
+  if(mtplz_check_rt_library)
+    set(TIMER_LINK rt)
+  endif()
 endif()
 
 # Group these objects together for later use.
 add_library(kenlm_util ${KENLM_UTIL_DOUBLECONVERSION_SOURCE} ${KENLM_UTIL_STREAM_SOURCE} ${KENLM_UTIL_SOURCE})
-target_link_libraries(kenlm_util ${Boost_LIBRARIES} ${READ_COMPRESSED_LIBS} ${THREADS} ${TIMER_LINK})
+target_link_libraries(kenlm_util Boost::boost ${READ_COMPRESSED_LIBS} Threads::Threads ${TIMER_LINK})
+
+install(
+    TARGETS kenlm_util
+    EXPORT "${targets_export_name}"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    RUNTIME DESTINATION "bin"
+    INCLUDES DESTINATION "${include_install_dir}"
+)
 
 AddExes(EXES probing_hash_table_benchmark
-        LIBRARIES kenlm_util ${Boost_LIBRARIES} ${THREADS})
+        LIBRARIES kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 AddExes(EXES cat_compressed
-        LIBRARIES kenlm_util ${Boost_LIBRARIES} ${THREADS})
+        LIBRARIES kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 
 # Only compile and run unit tests if tests should be run
 if(BUILD_TESTING)
@@ -94,10 +103,10 @@ if(BUILD_TESTING)
   )
 
   AddTests(TESTS ${KENLM_BOOST_TESTS_LIST}
-           LIBRARIES kenlm_util ${Boost_LIBRARIES} ${THREADS})
+           LIBRARIES kenlm_util ${Boost_LIBRARIES} Threads::Threads)
 
   # file_piece_test requires an extra command line parameter
   KenLMAddTest(TEST file_piece_test
-               LIBRARIES kenlm_util ${Boost_LIBRARIES} ${THREADS}
+               LIBRARIES kenlm_util ${Boost_LIBRARIES} Threads::Threads
                TEST_ARGS ${CMAKE_CURRENT_SOURCE_DIR}/file_piece.cc)
 endif()

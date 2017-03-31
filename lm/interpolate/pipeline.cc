@@ -39,7 +39,7 @@ void SetupInputs(std::size_t buffer_size, const UniversalVocab &vocab, util::Fix
     }
   }
  for (std::size_t i = 0; i < chains.size(); ++i) {
-    positions.push_back(chains[i]);
+    positions.push_back(util::stream::ChainPositions(chains[i]));
   }
 }
 

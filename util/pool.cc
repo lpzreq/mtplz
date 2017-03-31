@@ -29,6 +29,9 @@ void Pool::FreeAll() {
 void *Pool::More(std::size_t size) {
   std::size_t amount = std::max(static_cast<size_t>(32) << free_list_.size(), size);
   uint8_t *ret = static_cast<uint8_t*>(MallocOrThrow(amount));
+#if !defined(NDEBUG)
+  memset(ret, 0xff, amount);
+#endif
   free_list_.push_back(ret);
   current_ = ret + size;
   current_end_ = ret + amount;
