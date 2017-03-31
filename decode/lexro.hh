@@ -8,7 +8,12 @@ class LexicalizedReordering : public Feature {
   public:
     typedef uint8_t Relation;
 
+#if defined(MTPLZ_DECODE_VALUE_COUNT)
+    static constexpr uint8_t VALUE_COUNT = MTPLZ_DECODE_VALUE_COUNT;
+#else
     static constexpr uint8_t VALUE_COUNT = 6;
+#endif
+
     static constexpr float DEFAULT_VALUE = 0;
 
     static constexpr uint8_t FORWARD = 0;

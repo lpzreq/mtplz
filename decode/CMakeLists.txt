@@ -46,6 +46,13 @@ target_link_libraries(mtplz_decode mtplz_search mtplz_pt kenlm kenlm_util ${Boos
 target_compile_features(mtplz_decode PUBLIC cxx_range_for)
 target_include_directories(mtplz_decode PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>")
 
+string(COMPARE EQUAL "${MTPLZ_DECODE_VALUE_COUNT}" "" is_empty)
+if(NOT is_empty)
+  target_compile_definitions(
+      mtplz_decode PUBLIC "-DMTPLZ_DECODE_VALUE_COUNT=${MTPLZ_DECODE_VALUE_COUNT}"
+  )
+endif()
+
 install(
     TARGETS mtplz_decode
     EXPORT "${targets_export_name}"
