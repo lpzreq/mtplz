@@ -5,6 +5,10 @@ include(CMakeParseArguments)
 # Adds a bunch of executables to the build, each depending on the specified
 # dependent object files and linking against the specified libraries
 function(AddExes)
+  if(NOT MTPLZ_BUILD_EXE)
+    return()
+  endif()
+
   set(multiValueArgs EXES DEPENDS LIBRARIES)
   cmake_parse_arguments(AddExes "" "" "${multiValueArgs}" ${ARGN})
 
@@ -31,6 +35,10 @@ endfunction()
 # object files, linking against the specified libraries, and with the
 # specified command line arguments
 function(KenLMAddTest)
+  if(NOT MTPLZ_BUILD_EXE)
+    return()
+  endif()
+
   cmake_parse_arguments(KenLMAddTest "" "TEST"
                         "DEPENDS;LIBRARIES;TEST_ARGS" ${ARGN})
 

@@ -47,7 +47,12 @@ target_compile_definitions(kenlm PUBLIC -DKENLM_MAX_ORDER=${KENLM_MAX_ORDER})
 # This directory has children that need to be processed
 add_subdirectory(builder)
 add_subdirectory(filter)
-add_subdirectory(interpolate)
+
+option(MTPLZ_BUILD_KENLM_INTERPOLATE "Build kenlm_interpolate module" ON)
+
+if(MTPLZ_BUILD_KENLM_INTERPOLATE)
+  add_subdirectory(interpolate)
+endif()
 
 # Explicitly list the executable files to be compiled
 set(EXE_LIST

@@ -10,6 +10,8 @@ HunterGate(
 # Define a single cmake project
 project(mtplz VERSION 0.1)
 
+option(MTPLZ_BUILD_EXE "Build executables" ON)
+
 # Tell cmake that we want unit tests to be compiled
 include(CTest)
 enable_testing()
